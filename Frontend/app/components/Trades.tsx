@@ -7,38 +7,39 @@ export default function Trade({ market }: { market: string }) {
 
     useEffect(() => {
         // Register a callback for trade updates via WebSocket
-        SignalingManager.getInstance().registerCallback(
-            "trades",
-            (data: any) => {
+        const signalingManager = SignalingManager.getInstance();
+        signalingManager.registerCallback(
+            "trade",
+            (newTrade: any) => {
                 setTrades((prevTrades) => {
-                    // Update trades with the new data
-                    return [...data.trades, ...prevTrades];
+                    // Prepend new trade to the existing trades
+                    return [newTrade, ...prevTrades];
                 });
             },
-            `TRADES-${market}`
+            `TRADE-${market}`
         );
 
         // Subscribe to the trade updates
-        SignalingManager.getInstance().sendMessage({
+        signalingManager.sendMessage({
             method: "SUBSCRIBE",
-            params: [`trades.${market}`],
+            params: [`trade.${market}`],
         });
 
         // Fetch initial trades when component mounts
-        getTrades(market).then((t) => {
-            setTrades(t);
+        getTrades(market).then((initialTrades) => {
+            setTrades(initialTrades);
         });
 
         // Cleanup on component unmount
         return () => {
-            SignalingManager.getInstance().sendMessage({
-                method: "UNSUBSCRIBE",
-                params: [`trades.${market}`],
-            });
-            SignalingManager.getInstance().deRegisterCallback(
-                "trades",
-                `TRADES-${market}`
+            signalingManager.deRegisterCallback(
+                "trade",
+                `TRADE-${market}`
             );
+            signalingManager.sendMessage({
+                method: "UNSUBSCRIBE",
+                params: [`trade.${market}`],
+            });
         };
     }, [market]);
 

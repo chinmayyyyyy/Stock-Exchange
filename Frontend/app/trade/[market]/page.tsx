@@ -9,7 +9,7 @@ import Trade from "@/app/components/Trades";
 export default function Page() {
     const  [trade, settrade] = useState(false);
     const { market } = useParams();
-    return <div className="flex flex-row flex-1">
+    return <div className="flex flex-row flex-1 overflow-x-hidden">
         <div className="flex flex-col flex-1">
             <MarketBar market={market as string} />
             <div className="flex flex-row h-[920px] border-y border-slate-800">
@@ -59,9 +59,6 @@ export default function Page() {
                 </div>
             </div>
             </div>
-        </div>
-        <div>
-        <div className="w-[1px] flex-col bg-baseBorderLight"/>
         </div>
             <div className="flex flex-col w-[250px]">
                 <SwapUI market={market as string} />
