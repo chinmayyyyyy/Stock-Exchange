@@ -75,7 +75,7 @@ const MarketRow = ({ market }: { market: Ticker }) => {
         <p className="text-base font-medium tabular-nums">{market.volume}</p>
       </td>
       <td className="px-1 py-3">
-        <p className="text-base font-medium tabular-nums text-greenText">
+        <p className={`${Number(market.priceChangePercent) > 0 ? "text-green-400" : "text-red-400" } text-base font-medium tabular-nums text-greenText`}>
           {Number(market.priceChangePercent).toFixed(3)}%
         </p>
       </td>
