@@ -34,6 +34,7 @@ klineRouter.get("/", async (req, res) => {
     try {
         //@ts-ignore
         const result = await pgClient.query(query, [new Date(startTime * 1000 as string), new Date(endTime * 1000 as string)]);
+       //@ts-ignore
         res.json(result.rows.map(x => ({
             close: x.close,
             end: x.bucket,
